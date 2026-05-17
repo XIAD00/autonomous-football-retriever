@@ -30,9 +30,9 @@ class BallDetector:
         for box in results.boxes:
 
             cls = int(box.cls[0])
+            conf = float(box.conf[0])
 
-            # class 0 = ball (adjust if needed)
-            if cls == 0:
+            if cls == 0 and conf > 0.5:
 
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
 
@@ -41,7 +41,8 @@ class BallDetector:
 
                 return {
                     "center": (cx, cy),
-                    "frame_size": (w, h)
+                    "frame_size": (w, h),
+                    "confidence": conf
                 }
 
         return None
