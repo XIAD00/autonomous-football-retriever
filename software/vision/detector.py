@@ -26,6 +26,8 @@ class BallDetector:
         results = self.model(frame, verbose=False)[0]
 
         h, w, _ = frame.shape
+        best_ball = None
+        best_conf = 0
 
         for box in results.boxes:
 
@@ -33,16 +35,21 @@ class BallDetector:
             conf = float(box.conf[0])
 
             if cls == 0 and conf > 0.5:
+                continue
 
-                x1, y1, x2, y2 = map(int, box.xyxy[0])
+            x1, y1, x2, y2 = map(int, box.xyxy[0])
 
-                cx = int((x1 + x2) / 2)
-                cy = int((y1 + y2) / 2)
+            cx = (x1 + x2) // 2
+            cy = (y1 + y2) // 2
 
-                return {
-                    "center": (cx, cy),
-                    "frame_size": (w, h),
-                    "confidence": conf
-                }
+            if conf > best_conf:
+                best_conf = conf
+                best_ball = {
+                "center": (cx, cy),
+                 "frame_size": (w, h),
+                 "confidence": conf
+                  }
+
+        return best_ball
 
         return None
