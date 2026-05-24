@@ -51,5 +51,6 @@ class BallDetector:
                   }
 
         return best_ball
-
-        return None
+    
+    def stop(self):
+        self.cap.stop()
